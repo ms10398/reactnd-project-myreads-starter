@@ -12,7 +12,13 @@ class BookSearch extends Component {
 
   static propTypes = {
     onChange: PropTypes.func.isRequired,
-    myBooks: PropTypes.array.isRequired
+    myBooks: PropTypes.arrayOf(PropTypes.shape({
+      title: PropTypes.string.isRequired,
+      shelf: PropTypes.string.isRequired,
+      imageLinks: PropTypes.object.isRequired,
+      authors: PropTypes.arrayOf(PropTypes.string.isRequired),
+      id: PropTypes.string.isRequired
+    }))
   }
 
   handleChange = (event) => {
@@ -38,6 +44,7 @@ class BookSearch extends Component {
     if (val.length !== 0) {
       BooksAPI.search(val, 10).then((books) => {
         if (books.length > 0) {
+          books = books.filter((book)=>book.imageLinks)
           books = this.changeBookShelf(books)
           this.setState({Books: books})
         }
